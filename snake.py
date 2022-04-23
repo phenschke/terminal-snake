@@ -9,38 +9,42 @@ class Game:
         self.board = [[0 for width in range(self.GAME_WIDTH)] for height in range(self.GAME_HEIGHT)]
         self.food = []
         self.generate_food()
-        snake_starting_pos = (random.randint(2, self.GAME_HEIGHT-2), random.randint(2, self.GAME_WIDTH-2))
+        snake_starting_pos = (random.randint(4, self.GAME_HEIGHT-4), random.randint(4, self.GAME_WIDTH-4))
         self.snake = [snake_starting_pos]
         self.prev_key_input = 'w' # snake starts upwards
 
     def draw(self):
-        os.system('cls' if os.name == 'nt' else 'clear')
-        print("TERMINAL SNAKE".center(self.GAME_WIDTH * 2))
-        print("CONTROLS: W A S D".center(self.GAME_WIDTH * 2))
-        print(('SCORE: ' + str(len(self.snake))).center(self.GAME_WIDTH * 2))
+        print('\033c')
+        # os.system('cls' if os.name == 'nt' else 'clear')
+        out_str = ''
+        out_str += "TERMINAL SNAKE".center(self.GAME_WIDTH * 2) + '\n'
+        out_str += "CONTROLS: W A S D".center(self.GAME_WIDTH * 2) + '\n'
+        out_str += ('SCORE: ' + str(len(self.snake))).center(self.GAME_WIDTH * 2) + '\n'
+        
         for i_r, row in enumerate(self.board):
             for i_c, column in enumerate(row):
                     # draw borders using box unicode
                     if (i_r, i_c) == (0, 0):
-                        print('\u250C', end='')
+                        out_str += '\u250C'
                     elif (i_r, i_c) == (0, self.GAME_WIDTH-1):
-                        print('\u2510', end='')
+                        out_str += '\u2510'
                     elif (i_r, i_c) == (self.GAME_HEIGHT-1, 0):
-                        print('\u2514', end='')
+                        out_str += '\u2514'
                     elif (i_r, i_c) == (self.GAME_HEIGHT-1, self.GAME_WIDTH-1):
-                        print('\u2518', end='')
+                        out_str += '\u2518'
                     elif i_c in (0, self.GAME_WIDTH-1):
-                        print('\u2502', end='')
+                        out_str += '\u2502'
                     elif i_r in (0, self.GAME_HEIGHT-1):
-                        print('\u2500\u2500', end='')
+                        out_str += '\u2500\u2500'
                     # draw snake, food, and whitespace
                     elif (i_r, i_c) in self.snake:
-                        print('\U0001F40D', end='')
+                        out_str += '\U0001F40D'
                     elif (i_r, i_c) in self.food:
-                        print('\U0001F355', end='')
+                        out_str += '\U0001F355'
                     else:
-                        print(' ', end=' ')
-            print() # new line
+                        out_str += '  '
+            out_str += '\n' # new line
+        print(out_str, end='')
 
     def get_input(self):
         key, timeout = pytimedinput.timedKey(prompt="", timeout=0.4, allowCharacters="wasd")
