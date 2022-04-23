@@ -15,20 +15,32 @@ class Game:
 
     def draw(self):
         os.system('cls' if os.name == 'nt' else 'clear')
-        print("- - - TERMINAL SNAKE - - -".center(self.GAME_WIDTH * 2))
+        print("TERMINAL SNAKE".center(self.GAME_WIDTH * 2))
         print("CONTROLS: W A S D".center(self.GAME_WIDTH * 2))
         print(('SCORE: ' + str(len(self.snake))).center(self.GAME_WIDTH * 2))
         for i_r, row in enumerate(self.board):
             for i_c, column in enumerate(row):
-                    if i_r in (0, self.GAME_HEIGHT-1) or i_c in (0, self.GAME_WIDTH-1):
-                        print('#', end=' ')
+                    # draw borders using box unicode
+                    if (i_r, i_c) == (0, 0):
+                        print('\u250C', end='')
+                    elif (i_r, i_c) == (0, self.GAME_WIDTH-1):
+                        print('\u2510', end='')
+                    elif (i_r, i_c) == (self.GAME_HEIGHT-1, 0):
+                        print('\u2514', end='')
+                    elif (i_r, i_c) == (self.GAME_HEIGHT-1, self.GAME_WIDTH-1):
+                        print('\u2518', end='')
+                    elif i_c in (0, self.GAME_WIDTH-1):
+                        print('\u2502', end='')
+                    elif i_r in (0, self.GAME_HEIGHT-1):
+                        print('\u2500\u2500', end='')
+                    # draw snake, food, and whitespace
                     elif (i_r, i_c) in self.snake:
-                        print('X', end=' ')
+                        print('\U0001F40D', end='')
                     elif (i_r, i_c) in self.food:
-                        print('o', end=' ')
+                        print('\U0001F355', end='')
                     else:
                         print(' ', end=' ')
-            print()
+            print() # new line
 
     def get_input(self):
         key, timeout = pytimedinput.timedKey(prompt="", timeout=0.4, allowCharacters="wasd")
@@ -37,6 +49,7 @@ class Game:
         self.prev_key_input = key
         return key
 
+    # move and grow snake if it collides with food
     def move_snake(self, key):
         direction = {'a': (0, -1),
                     'd': (0, 1),
@@ -59,15 +72,15 @@ class Game:
 
     def generate_food(self):
         # todo: prevent food spawning on a position occoupied by snake
-        new_food = (random.randint(1, self.GAME_HEIGHT-2), random.randint(1, self.GAME_HEIGHT-2))
+        new_food = (random.randint(1, self.GAME_HEIGHT-2), random.randint(1, self.GAME_WIDTH-2))
         self.food.append(new_food)
 
     def is_game_over(self):
         if self.snake[0] in self.snake[1:]:
-            print('Snake hit itself.')
+            print('SNAKE HIT ITSELF.')
             return True
-        if self.snake[0] in (0, self.GAME_HEIGHT-1) or self.snake[0] in (0, self.GAME_HEIGHT-1):
-            print('Snake hit a wall.')
+        if self.snake[0][0] in (0, self.GAME_HEIGHT-1) or self.snake[0][1] in (0, self.GAME_WIDTH-1):
+            print(self.snake[0], 'SNAKE HIT A WALL.')
             return True   
         return False
 
