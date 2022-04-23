@@ -1,5 +1,4 @@
 import pytimedinput
-import os
 import random
 
 class Game:
