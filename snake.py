@@ -18,7 +18,7 @@ class Game:
         out_str = ''
         out_str += "TERMINAL SNAKE".center(self.GAME_WIDTH * 2) + '\n'
         out_str += "CONTROLS: W A S D".center(self.GAME_WIDTH * 2) + '\n'
-        out_str += ('SCORE: ' + str(len(self.snake))).center(self.GAME_WIDTH * 2) + '\n'
+        out_str += ('SCORE: ' + str(len(self.snake)-1)).center(self.GAME_WIDTH * 2) + '\n'
         
         for i_r, row in enumerate(self.board):
             for i_c, column in enumerate(row):
